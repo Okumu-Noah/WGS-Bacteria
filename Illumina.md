@@ -23,3 +23,9 @@ Genome annotation: In this step, the genome assembly is annotated with gene pred
 Comparative genomics: Comparative genomics involves comparing the newly sequenced genome with existing genomes to identify unique features, virulence factors, and antibiotic resistance genes. Tools like Roary or Prokka can be used for this purpose. i. Evolutionary analysis use phylogenetic tree/mapping can be constructed using the identified SNPs to analyze the evolutionary relationship between different bacterial strains. ANI-Dendogram which uses dREP gives genetic relatedness between two bacterial genomes. It calculates the average percentage of nucleotide sequence identity between the two genomes, taking into account both conserved and divergent regions. ii. Pangenome analysis use Roary. iii. Genome visualization in ring structures use BRIG. iv. AMR genes use RGI, CARD, PCA, ResFinder v. Functional annotation COG, GO, KEGG vi. DIvergence Time estimation
 
 Metadata - linking genotypic data with phenotypic traits, Plasmids, Mutations etc
+
+# Steps
+1. Log into hpc via ssh & interactive computing
+```
+interactive -w compute05 -c 3
+```
