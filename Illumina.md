@@ -299,3 +299,38 @@ spades.py -k 27 \
 -t 4 \
 -m 100
 ```
+k-mer size: 27 (-k 27) Input read files: AS-27566-C1_S5_L001.R1.trim.fastq.gz and AS-27566-C1_S5_L001.R2.trim.fastq.gz (-1 and -2) Output directory: ./results/spades (-o) Number of threads: 4 (-t 4) Memory limit: 100 GB (-m 100)
+
+For all samples via loop
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch
+#SBATCH -J SPAdes
+#SBATCH -n 4
+
+# Load modules
+module load spades/3.15
+
+# Define input and output directories
+INPUT_DIR=./results/fastp
+OUTPUT_DIR=./results/spades
+
+#make output directory
+mkdir -p "${OUTPUT_DIR}"
+
+# Iterate over all files in input directory
+for file in ${INPUT_DIR}/*_R1.trim.fastq.gz
+do
+  # Extract sample name from file name
+  SAMPLE=$(basename "${file}" _R1.trim.fastq.gz)
+
+  # Run spades.py
+  spades.py -k 27 \
+            -1 ${INPUT_DIR}/${SAMPLE}_R1.trim.fastq.gz \
+            -2 ${INPUT_DIR}/${SAMPLE}_R2.trim.fastq.gz \
+            -o ${OUTPUT_DIR}/${SAMPLE} \
+            -t 4 \
+            -m 100 \
+            |& tee ${OUTPUT_DIR}/${SAMPLE}.spades.log || echo "${SAMPLE} failed"
+done
+```
