@@ -603,5 +603,23 @@ Save and run
 ```
 12. Species Identification
 ```
-module load blast/2.12.0+2. 
+module load blast/2.12.0+ 
+```
+
+```
+cd ./results/blast
+```
+
+i) For one sample
+
+```
+blastn \
+-task megablast \
+-query ./results/spades/contigs.fasta \
+-db /export/data/bio/ncbi/blast/db/v5/nt \
+-outfmt '6 qseqid staxids bitscore std sscinames sskingdoms stitle' \
+-culling_limit 5 \
+-num_threads 4 \
+-evalue 1e-25 \
+-out ./results/blast/contigs.fasta.vs.nt.cul5.1e25.megablast.out
 ```
