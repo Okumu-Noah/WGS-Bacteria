@@ -52,3 +52,11 @@ less filename.fastq
 head -n 10 filename.fastq
 tail -n 10 filename.fastq
 ```
+5. Unzip .gz files: Use the gunzip or gzip command depending on your system
+```
+gunzip -k *.gz
+```
+it keeps the .gz files too, to remove/delete .gz files run within your "current directory!"
+```
+rm -f *.gz
+```
