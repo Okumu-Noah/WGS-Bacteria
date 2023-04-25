@@ -134,3 +134,26 @@ c) Fastqc loop for all the the files
 ```
 nano
 ```
+Create shebang scripts
+```
+#!/bin/bash
+
+#bash generate-fastqc-reports.sh ./results/fastqc/ ./raw_data/Fastq/
+
+#Make directory to store the results
+mkdir -p ./results/fastqc/
+
+#load fastqc module
+module load fastqc/0.11.4
+
+#fastqc reports directory
+REPORT_DIR=$1
+
+#fastq files directory
+FASTQ_DIR=$2
+
+#run fastqc tool
+for file in $FASTQ_DIR/*.fastq; do
+        fastqc ${file} -o ${REPORT_DIR} -f fastq
+        done
+```
