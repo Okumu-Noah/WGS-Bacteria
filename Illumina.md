@@ -112,11 +112,25 @@ fastp --in1 ./raw_data/Fastq/AS-26335-C1-C_S4_L001_R1_001.fastq.gz \
 	--html results/fastp/AS-26335-C1-C_S4_L001.fastp.html \
 	--failed_out ./results/fastp/AS-26335-C1-C_S4_L001_fail.fastq.gz \
 	--thread 4 \
-	-5 -3 -r \
+	-5 -3 -3 -r \
 	--detect_adapter_for_pe \
 	--qualified_quality_phred 20 \
 	--cut_mean_quality 20\
 	--length_required 15 \
 	--dedup \
 	|& tee ./results/fastp/AS-26335-C1-C_S4_L001.fastp.log
+```
+--json: output a json file that summarizes the processing statistics of the reads --html: output an html file that visualizes the processing statistics of the reads --failed_out: output the reads that failed to pass the processing steps to a separate file --thread: number of threads to use, here 3 -5 -3 -r: options for adapter trimming and quality filtering --detect_adapter_for_pe: automatically detect and trim adapters for paired-end reads --qualified_quality_phred: quality threshold for base calling --cut_mean_quality: quality threshold for sliding window trimming --length_required: minimum length required for reads to be kept after processing --dedup: deduplicate identical reads |& tee: save the command output to a log file as well as display it in the terminal
+
+b) Rerun the fastqc on the trimmed one file
+```
+fastqc
+        -t 4
+        -o ./results/fastqc/
+        -f fastq ./raw_data/Fastq/AS-26335-C1-C_S4_L001_R1_001.trim.fastq
+                ./raw_data/Fastq/AS-26335-C1-C_S4_L001_R2_001.trim.fastq
+```
+c) Fastqc loop for all the the files
+```
+nano
 ```
