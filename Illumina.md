@@ -30,7 +30,8 @@
 interactive -w compute05 -c 3
 ```
 2. Creating directory
-```cd /var/scratch/
+```
+cd /var/scratch/
 mkdir -p $USER/bacteria-wgs/crpa
 cd $USER/bacteria-wgs/crpa
 ```
