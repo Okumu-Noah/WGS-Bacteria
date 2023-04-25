@@ -522,3 +522,18 @@ Save & run_busco.sh
 ```
  sbatch -w compute05 run_busco.sh
 ```
+The input_dir and output_dir variables are set to the input and output directories, respectively, and the database variable is set to the name of the BUSCO lineage-specific database to use. The script loops through all FASTA files in the input_dir directory, sets the output path for each file, and then runs the busco command on the current file using the appropriate parameters. The output is saved to a directory named after the input file, with the ".busco" suffix added.
+
+III) Genome annotation
+
+In genome annotation, the goal is to identify and label the features of/on a genome sequence.
+
+First, unload the modules to avoid conflict between the loaded dependencies
+
+```
+module purge
+```
+
+```
+module load prokka/1.11
+```
