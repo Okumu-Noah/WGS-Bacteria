@@ -601,3 +601,7 @@ Save and run
 ```
  sbatch -w compute05 run_prokka.sh
 ```
+12. Species Identification
+```
+module load blast/2.12.0+2. 
+```
