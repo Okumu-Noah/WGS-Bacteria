@@ -289,3 +289,13 @@ run the job as saved
 ```
 sbatch -w compute05 run_fastqc_trim.sh
 ```
+9. Genome Assembly using SPAdes for the trimmed files
+i) for one sample
+```
+spades.py -k 27 \
+-1 ./results/fastp/AS-27566-C1_S5_L001.R1.trim.fastq.gz \
+-2 ./results/fastp/AS-27566-C1_S5_L001.R2.trim.fastq.gz \
+-o ./results/spades \
+-t 4 \
+-m 100
+```
