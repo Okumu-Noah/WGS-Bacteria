@@ -87,23 +87,13 @@ ii. Create the loop for all samples
 #SBATCH -p batch
 #SBATCH -J fastqc
 #SBATCH -n 4
-```
-```
 # Set the input and output directories
 INPUT_DIR=./raw_data/merged_fastq_pass/
 OUTPUT_DIR=./results/fastqc/
-```
-```
 # Make directory to store the results
 mkdir -p "$OUTPUT_DIR"
-```
-
-```
 # Load FastQC module
 module load fastqc/0.11.9
-```
-
-```
 # Run FastQC on all ONT sequencing files in the directory "raw_data/merged_fastq_pass/"
 for file in $INPUT_DIR/*.fastq; do
     fastqc -t 4 --extract -o $OUTPUT_DIR -f fastq $file
