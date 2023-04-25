@@ -597,3 +597,7 @@ for file in ${input_dir}/*.fasta; do
     prokka "$file" --outdir "$output_path" --cpus 4 --mincontiglen 200 --centre C --locustag L --compliant --force
 done
 ```
+Save and run
+```
+ sbatch -w compute05 run_prokka.sh
+```
