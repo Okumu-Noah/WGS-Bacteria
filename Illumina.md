@@ -800,3 +800,43 @@ blastn \
     -outfmt '6 qseqid staxids bitscore std sscinames sskingdoms stitle' \
     -num_threads 4
 ```
+
+
+-query: specifies the input query file in fasta format. -db: specifies the path to the VFDB blast database to be used for the search. -out: specifies the output file name and location for the blast results. -outfmt: specifies the format of the output file. In this case, it is set to format 6, which provides a tab-delimited output containing the query ID, subject taxonomy ID, bit score, standard deviation of the bit score, subject scientific name, subject kingdom, and subject title. -num_threads: specifies the number of threads to be used for the search. In this case, it is set to 4.
+
+Loop for all files
+
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch
+#SBATCH -J blast_vf
+#SBATCH -n 4
+
+#module purge
+module purge
+
+# Load modules
+module load blast/2.11.0
+
+# Define input and output directories
+INPUT_DIR=./results/spades
+OUTPUT_DIR=./results/blast
+
+# Create output directory if it does not exist
+mkdir -p "${OUTPUT_DIR}"
+
+# Loop over all files in the input directory
+for FILE in ${INPUT_DIR}/*.fasta
+do
+  # Get the sample name from the file name
+  SAMPLE_NAME=$(basename ${FILE} .fasta)
+
+  # Run BLAST
+  blastn \
+    -query ${FILE} \
+    -db /var/scratch/${USER}/bacteria-wgs/databases/VFDB/vfdb_seta_nt \
+    -out ${OUTPUT_DIR}/${SAMPLE_NAME}_virulence_factors_blast_VFDB.out \
+    -outfmt '6 qseqid staxids bitscore std sscinames sskingdoms stitle' \
+    -num_threads 4
+done
+```
