@@ -342,11 +342,14 @@ run the loop saved as run_spades.sh
 i) sequence/contigs
 ```
 less -S ./results/spades/contigs.fasta
+```
 ii) First 10 files/head
+
 ```
 grep '>' ./results/spades/contigs.fasta | head
 ```
 iii) Check thru
+
 ```
 cat ./results/spades/contigs.fasta
 ```
