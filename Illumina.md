@@ -366,3 +366,17 @@ quast.py \
 -t 4 \
 -o ./results/quast
 ```
+"quast.py": This is the command to run the QUAST software.
+
+"/results/spades/contigs.fasta": This is the path and filename of the input genome assembly file in FASTA format.
+
+"-t 4": This specifies that the software should use four threads to run the analysis, which can speed up the process.
+
+"-o /results/quast": This specifies the output directory where the results of the analysis will be stored.
+
+Inspect the quast report
+
+i) Download to your local wkd from hpc
+```
+cp -i AS-27566-C1-C_S23_L001/*.html ~/
+```
