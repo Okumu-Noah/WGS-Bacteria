@@ -462,23 +462,28 @@ busco \
 -c 4 \
 -f
 ```
+
 This command will run BUSCO on the contigs.fasta file using the "bacteria_odb10" database, outputting the results to a directory called AS-27566-C1-C_S23_L001_busco, using 4 CPUs, and overwriting any previous results in that directory (-f flag).
 
 i) View short summary
+
 ```
 less -S AS-27566-C1_S5_L001_busco/short_summary.specific.bacteria_odb10.AS-27566-C1_S5_L001_busco.txt
 ```
 ii) View full summary
+
 ```
  less -S AS-27566-C1_S5_L001_busco/run_bacteria_odb10/full_table.tsv
 ```
 
 iii) List and view a amino acid of protein sequence
+
 ```
  ls -lht AS-27566-C1_S5_L001_busco/run_bacteria_odb10/busco_sequences/
 ```
 
 b) Loop for all files?
+
 ```
 #!/usr/bin/bash -l
 #SBATCH -p batch
