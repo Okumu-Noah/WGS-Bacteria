@@ -201,3 +201,41 @@ Save and run
 ```
  sbatch -w compute05 run_fastp1.sh
 ```
+iii) Second pathway sbatch - submitting jobs to the cluster as you do other things (the best option)
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch
+#SBATCH -J fastp
+#SBATCH -n 4
+
+#load modules
+module load fastp/0.22.0
+
+#making directories
+INPUT_DIR=./raw_data/Fastq/
+OUTPUT_DIR=./results/fastp/
+
+# make output directory if it doesn't exist
+mkdir -p "${OUTPUT_DIR}"
+
+for R1 in $INPUT_DIR/*R1_001.fastq.gz
+do
+    R2=${R1/R1_001.fastq.gz/R2_001.fastq.gz}
+    NAME=$(basename ${R1} _R1_001.fastq.gz)
+    fastp --in1 ${R1} \
+          --in2 ${R2} \
+          --out1 ${OUTPUT_DIR}/${NAME}.R1.trim.fastq.gz \
+          --out2 ${OUTPUT_DIR}/${NAME}.R2.trim.fastq.gz \
+          --json ${OUTPUT_DIR}/${NAME}.fastp.json \
+          --html ${OUTPUT_DIR}/${NAME}.fastp.html \
+          --failed_out ${OUTPUT_DIR}/${NAME}.failed.fastq.gz \
+          --thread 4 \
+          -5 -3 -r \
+          --detect_adapter_for_pe \
+          --qualified_quality_phred 20 \
+          --cut_mean_quality 20 \
+          --length_required 15 \
+          --dedup \
+          |& tee ${OUTPUT_DIR}/${NAME}.fastp.log
+done
+```
