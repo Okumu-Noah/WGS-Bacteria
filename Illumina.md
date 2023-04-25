@@ -197,3 +197,7 @@ do
           |& tee ${OUTPUT_DIR}/${NAME}.fastp.log
 done
 ```
+Save and run
+```
+ sbatch -w compute05 run_fastp1.sh
+```
