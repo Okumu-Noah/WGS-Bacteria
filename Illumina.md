@@ -413,3 +413,52 @@ Savs and run
 ```
  sbatch -w compute05 run_quast.sh
 ```
+In this loop, the for statement iterates over all files in the input directory that end with the extension .fasta. For each file, the loop extracts the filename using the basename command, and creates a corresponding output path by replacing the file extension with the output directory using ${filename%.*}. The quast.py command is then run on the current file, using 4 threads and the output path created earlier.
+
+#!/usr/bin/bash -l: This is a shebang line that specifies the shell to use for the script.
+
+#SBATCH -p batch: This is an SLURM directive that specifies the partition or queue to run the job in. In this case, the job will be submitted to the "batch" partition.
+
+#SBATCH -J Quast: This sets the name of the job to "Quast".
+
+#SBATCH -n 4: This specifies the number of CPU cores to allocate for the job. In this case, the job will use 4 cores.
+
+input_dir=./results/spades: This sets the path to the directory containing the input files.
+
+output_dir=./results/quast: This sets the path to the directory where the output will be saved.
+
+for file in ${input_dir}/*.fasta; do: This begins a for loop that iterates over all files in the input directory that end with the extension .fasta.
+
+filename=$(basename "$file"): This extracts the filename from the full file path.
+
+output_path="${output_dir}/${filename%.*}": This creates the output path by replacing the file extension with the output directory.
+
+quast.py "$file" -t 4 -o "$output_path": This runs the quast.py command on the current file, using 4 threads and the output path created earlier.
+
+II) Genome completeness
+
+Assesses the presence or absence of highly conserved genes (orthologs) in an assembly/ ensures that all regions of the genome have been sequenced and assembled. It's performed using BUSCO (Benchmarking Universal Single-Copy Orthologs). Ideally, the sequenced genome should contain most of these highly conserved genes. they're lacking or less then the genome is not complete.
+
+I) For one sample
+
+i) Using genome search (used here)
+```
+busco \
+-i ./results/spades/contigs.fasta \
+-m genome \
+-o AS-27566-C1_S5_L001_busco \
+-l bacteria \
+-c 4 \
+-f
+```
+
+ii) for unknown spp using busco bacterial database
+```
+busco \
+-i ./results/spades/contigs.fasta \
+-m bacteria \
+-o AS-27566-C1-C_S23_L001_busco \
+-l bacteria_odb10 \
+-c 4 \
+-f
+```
