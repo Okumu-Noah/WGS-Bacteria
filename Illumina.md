@@ -285,3 +285,7 @@ for file in $INPUT_DIR/*.trim.fastq.gz; do
 
 done
 ```
+run the job as saved
+```
+sbatch -w compute05 run_fastqc_trim.sh
+```
