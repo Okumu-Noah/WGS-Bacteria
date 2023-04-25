@@ -517,3 +517,8 @@ do
     |& tee ${OUTPUT_DIR}/${SAMPLE}_busco.log || echo "${SAMPLE} failed"
 done
 ```
+Save & run_busco.sh
+
+```
+ sbatch -w compute05 run_busco.sh
+```
