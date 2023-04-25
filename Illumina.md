@@ -384,3 +384,28 @@ ii) To local computer homepage/wkd
 ```
 scp woguta@hpc.ilri.cgiar.org:~/AS-27566-C1-C_S23_L001.html .
 ```
+b) Loop for all the samples
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch
+#SBATCH -J QUAST
+#SBATCH -n 4
+
+# Set the path to the directory containing the input files
+input_dir=./results/spades
+
+# Set the path to the directory where the output will be saved
+output_dir=./results/quast
+
+# Make the output directory if it doesn't exist
+mkdir -p "${output_dir}"
+
+# Loop through all FASTA files in the input directory
+for file in ${input_dir}/*.fasta; do
+    filename=$(basename "$file")
+    output_path="${output_dir}/${filename%.*}"
+    
+    # Run the quast.py command on the current file
+    quast.py "$file" -t 4 -o "$output_path"
+done
+```
