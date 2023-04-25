@@ -537,3 +537,7 @@ module purge
 ```
 module load prokka/1.11
 ```
+
+```
+cd ./results/prokka
+```
