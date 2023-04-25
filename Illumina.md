@@ -572,3 +572,28 @@ View protein abundances
 ```
 less -S protein_abundances.txt
 ```
+ii) for all files.
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch
+#SBATCH -J Prokka
+#SBATCH -n 4
+
+# Set the path to the directory containing the input files
+input_dir=./results/spades
+
+# Set the path to the directory where the output will be saved
+output_dir=./results/prokka
+
+# Make the output directory if it doesn't exist
+mkdir -p "${output_dir}"
+
+# Loop through all FASTA files in the input directory
+for file in ${input_dir}/*.fasta; do
+    filename=$(basename "$file")
+    output_path="${output_dir}/${filename%.*}"
+    
+    # Run the Prokka command on the current file
+    prokka "$file" --outdir "$output_path" --cpus 4 --mincontiglen 200 --centre C --locustag L --compliant --force
+done
+```
