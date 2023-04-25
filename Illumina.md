@@ -338,3 +338,4 @@ run the loop saved as run_spades.sh
 ```
  sbatch -w compute05 run_spades.sh
 ```
+10. View the fasta files
