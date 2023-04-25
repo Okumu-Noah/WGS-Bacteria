@@ -840,3 +840,6 @@ do
     -num_threads 4
 done
 ```
+
+
+This loop uses a wildcard (*) to match all files with a .fasta extension in the INPUT_DIR. The loop then extracts the sample name from the file name (assuming that the file name ends with .fasta) and uses it to name the output file in the OUTPUT_DIR. The loop then runs the same blastn command for each sample, outputting the results to a separate file for each sample.
