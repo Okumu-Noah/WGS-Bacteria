@@ -112,7 +112,7 @@ fastp --in1 ./raw_data/Fastq/AS-26335-C1-C_S4_L001_R1_001.fastq.gz \
 	--html results/fastp/AS-26335-C1-C_S4_L001.fastp.html \
 	--failed_out ./results/fastp/AS-26335-C1-C_S4_L001_fail.fastq.gz \
 	--thread 4 \
-	-5 -3 -3 -r \
+	-5 -3 -r \
 	--detect_adapter_for_pe \
 	--qualified_quality_phred 20 \
 	--cut_mean_quality 20\
@@ -238,4 +238,16 @@ do
           --dedup \
           |& tee ${OUTPUT_DIR}/${NAME}.fastp.log
 done
+```
+run the job as saved
+```
+sbatch -w compute05 run_fastp2.sh
+```
+Checking the submitted job
+```
+ls -lth
+```
+Check the nano slurm number and squeue
+```
+nano slurm number
 ```
