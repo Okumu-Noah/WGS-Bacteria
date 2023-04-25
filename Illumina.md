@@ -409,3 +409,7 @@ for file in ${input_dir}/*.fasta; do
     quast.py "$file" -t 4 -o "$output_path"
 done
 ```
+Savs and run
+```
+ sbatch -w compute05 run_quast.sh
+```
