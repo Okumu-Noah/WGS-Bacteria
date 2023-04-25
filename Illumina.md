@@ -674,3 +674,18 @@ View the blast
 ```
 less -S ./results/blast/contigs.fasta.vs.nt.cul5.1e25.megablast.out
 ```
+
+13. AMR Identification
+Use Resistance Gene Identifier (RGI) which applies Comprehensive Antibiotic Resistance Database (CARD) as a reference to predict antibiotic resistome(s) from protein or nucleotide data based on homology and SNP models.
+
+```
+module purge
+
+module load rgi/6.0.2
+```
+
+```
+cd ./results/rgi
+
+ln -s /var/scratch/global/bacteria-wgs/databases/localDB .
+```
