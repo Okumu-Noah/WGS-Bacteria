@@ -103,3 +103,20 @@ Here, the -t option specifies the number of CPU threads to use, -o specifies the
   8. Run fastp
   
 a) for one file
+```
+fastp --in1 ./raw_data/Fastq/AS-26335-C1-C_S4_L001_R1_001.fastq.gz \
+	--in2 ./raw_data/Fastq/AS-26335-C1-C_S4_L001_R2_001.fastq.gz \
+	--out1 ./results/fastp/AS-26335-C1-C_S4_L001_R1_001.trim.fastq.gz \
+	--out2 ./results/fastp/AS-26335-C1-C_S4_L001_R2_001.trim.fastq.gz \
+	--json results/fastp/AS-26335-C1-C_S4_L001.fastp.json \
+	--html results/fastp/AS-26335-C1-C_S4_L001.fastp.html \
+	--failed_out ./results/fastp/AS-26335-C1-C_S4_L001_fail.fastq.gz \
+	--thread 4 \
+	-5 -3 -r \
+	--detect_adapter_for_pe \
+	--qualified_quality_phred 20 \
+	--cut_mean_quality 20\
+	--length_required 15 \
+	--dedup \
+	|& tee ./results/fastp/AS-26335-C1-C_S4_L001.fastp.log
+```
