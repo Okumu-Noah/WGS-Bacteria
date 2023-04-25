@@ -541,3 +541,14 @@ module load prokka/1.11
 ```
 cd ./results/prokka
 ```
+i) Run for one sample
+```
+prokka ./results/spades/contigs.fasta \
+--outdir ./results/prokka \
+--cpus 4 \
+--mincontiglen 200 \
+--centre C \
+--locustag L \
+--compliant \
+--force
+```
