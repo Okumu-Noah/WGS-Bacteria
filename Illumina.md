@@ -157,3 +157,43 @@ for file in $FASTQ_DIR/*.fastq; do
         fastqc ${file} -o ${REPORT_DIR} -f fastq
         done
 ```
+To use this script, you can save it to a file (e.g., run_fastqc.sh), make it executable (chmod +x run_fastqc1.sh), and then run it with the directory paths as arguments
+```
+bash run_fastqc1.sh
+```
+Running fastp for all the files/trimming all the files i) First Pathway
+```
+#!/bin/bash
+
+#Set the input and output directories
+INPUT_DIR=./raw_data/Fastq/
+OUTPUT_DIR=./results/fastp/
+
+#load modules
+module load fastp/0.22.0
+
+# make output directory if it doesn't exist
+mkdir -p "${OUTPUT_DIR}"
+
+#Loop through all files in the input directory
+for R1 in $INPUT_DIR/*R1_001.fastq.gz
+do
+    R2=${R1/R1_001.fastq.gz/R2_001.fastq.gz}
+    NAME=$(basename ${R1} _R1_001.fastq.gz)
+    fastp --in1 ${R1} \
+          --in2 ${R2} \
+          --out1 ${OUTPUT_DIR}/${NAME}.R1.trim.fastq.gz \
+          --out2 ${OUTPUT_DIR}/${NAME}.R2.trim.fastq.gz \
+          --json ${OUTPUT_DIR}/${NAME}.fastp.json \
+          --html ${OUTPUT_DIR}/${NAME}.fastp.html \
+          --failed_out ${OUTPUT_DIR}/${NAME}.failed.fastq.gz \
+          --thread 4 \
+          -5 -3 -r \
+          --detect_adapter_for_pe \
+          --qualified_quality_phred 20 \
+          --cut_mean_quality 20 \
+          --length_required 15 \
+          --dedup \
+          |& tee ${OUTPUT_DIR}/${NAME}.fastp.log
+done
+```
