@@ -380,3 +380,7 @@ i) Download to your local wkd from hpc
 ```
 cp -i AS-27566-C1-C_S23_L001/*.html ~/
 ```
+ii) To local computer homepage/wkd
+```
+scp woguta@hpc.ilri.cgiar.org:~/AS-27566-C1-C_S23_L001.html .
+```
