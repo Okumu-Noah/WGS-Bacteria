@@ -689,3 +689,26 @@ cd ./results/rgi
 
 ln -s /var/scratch/global/bacteria-wgs/databases/localDB .
 ```
+
+This creates symbolic link to the RGI database located in /var/scratch/global/bacteria-wgs/databases/localDB in the ./results/rgi directory using the ln -s command, to be used as a reference database for RGI for comparison against the contigs or assembled genomes fromthe bacterial WGS data to identify antibiotic resistance genes.
+
+i) Run AMR for one sample
+
+```
+# Perform RGI analysis
+
+rgi main --input_sequence ./results/spades/contigs.fasta \
+--output_file ./results/rgi/AS-27566-C1-C_S23_L001_rgi \
+--local \
+-a BLAST \
+-g PRODIGAL \
+--clean \
+--low_quality \
+--num_threads 4 \
+--split_prodigal_jobs
+	
+	
+# samples and AMR genes organized alphabetically:
+rgi heatmap --input ./results/rgi \
+--output ./results/rgi/AS-27566-C1-C_S23_L001_rgi_alphabetic.png
+```
