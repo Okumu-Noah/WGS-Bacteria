@@ -662,3 +662,15 @@ for file in "${input_dir}"/*.fasta; do
         -out "${output_dir}/${filename}.vs.nt.cul5.1e25.megablast.out"
 done
 ```
+
+Save and run_blastn_search.sh
+
+```
+run_blastn.sh
+```
+
+View the blast
+
+```
+less -S ./results/blast/contigs.fasta.vs.nt.cul5.1e25.megablast.out
+```
