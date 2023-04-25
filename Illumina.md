@@ -1,4 +1,4 @@
-# Analysis of llumina WGS data
+# Analysis of Illumina WGS data
 ## Illumina Pipeline
 1. Data acqusition in fastq format and unzipping
 
