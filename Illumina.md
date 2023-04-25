@@ -101,4 +101,5 @@ fastqc
 Here, the -t option specifies the number of CPU threads to use, -o specifies the output directory, -f specifies the file format (optional for FASTQ files), and the two positional arguments specify the paths to the two input FASTQ files.
 
   8. Run fastp
+  
 a) for one file
