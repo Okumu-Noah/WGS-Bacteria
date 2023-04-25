@@ -258,3 +258,30 @@ squeue
 These will loop through all the R1 fastq files in the INPUT_DIR directory and run fastp on each pair of R1 and R2 files, outputting the trimmed files and the reports to the OUTPUT_DIR directory. The ${R1/R1_001.fastq.gz/R2_001.fastq.gz} line replaces the _R1_001.fastq.gz suffix in the filename with _R2_001.fastq.gz to get the R2 file. The ${basename ${R1} _R1_001.fastq.gz} line extracts the basename of the R1 file without the _R1_001.fastq.gz suffix to use as the name of the output files.
 
 Do fastqc for all the trimmed files
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch
+#SBATCH -J fastqc
+#SBATCH -n 4
+
+# load modules
+module load fastqc/0.11.9
+
+# set input and output directories
+INPUT_DIR=./results/fastp
+OUTPUT_DIR=./results/fastqc
+
+# make output directory if it doesn't exist
+mkdir -p "${OUTPUT_DIR}"
+
+# loop over all the trimmed fastq files in the input directory
+for file in $INPUT_DIR/*.trim.fastq.gz; do
+
+    # get the filename without the extension
+    filename=$(basename "$file" .trim.fastq.gz)
+
+    # run fastqc on the file and save the output to the output directory
+    fastqc -t 4 -o $OUTPUT_DIR $file
+
+done
+```
