@@ -60,3 +60,7 @@ it keeps the .gz files too, to remove/delete .gz files run within your "current 
 ```
 rm -f *.gz
 ```
+alternatively, run this code once without k as not to keep .gz files
+```
+gunzip *.gz
+```
