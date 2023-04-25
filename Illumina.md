@@ -334,3 +334,7 @@ do
             |& tee ${OUTPUT_DIR}/${SAMPLE}.spades.log || echo "${SAMPLE} failed"
 done
 ```
+run the loop saved as run_spades.sh
+```
+ sbatch -w compute05 run_spades.sh
+```
