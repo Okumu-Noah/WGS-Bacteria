@@ -851,7 +851,7 @@ This loop uses a wildcard (*) to match all files with a .fasta extension in the 
 #SBATCH --error=error_output_%j.txt
 #SBATCH --job-name="abricate"
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=N.Okumu@cgiar.org
+#SBATCH --mail-user=USER@cgiar.org
 
 # a shell script to perform quality and adapter trimming on illumina fastq data
 
