@@ -632,13 +632,17 @@ ii) Loop
 #!/usr/bin/bash -l
 #SBATCH -p batch
 #SBATCH -J blastn
-#SBATCH -n 4
+#SBATCH -n 8
+
+#module load
+module purge
+module load blast/2.12.0+
 
 # Set the input directory
-input_dir="./results/spades"
+input_dir="./output/spades"
 
 # Set the output directory
-output_dir="./results/blast"
+output_dir="./output/blast"
 
 # Set the BLAST database path
 db_path="/export/data/bio/ncbi/blast/db/v5/nt"
@@ -647,19 +651,22 @@ db_path="/export/data/bio/ncbi/blast/db/v5/nt"
 mkdir -p "${output_dir}"
 
 # Loop over all files in the input directory
-for file in "${input_dir}"/*.fasta; do
+for file in "${input_dir}"/*/contigs.fasta; do
     # Extract the filename without the extension
     filename=$(basename "${file%.*}")
-    
-    # Perform the BLASTN search
-    blastn -task megablast \
+
+# Make output directory for this sample
+# mkdir -p "${OUTPUT_DIR}/${filename}"
+
+# Perform the BLASTN search
+ blastn -task megablast \
         -query "${file}" \
         -db "${db_path}" \
         -outfmt '6 qseqid staxids bitscore std sscinames sskingdoms stitle' \
         -culling_limit 5 \
-        -num_threads 4 \
+        -num_threads 8 \
         -evalue 1e-25 \
-        -out "${output_dir}/${filename}.vs.nt.cul5.1e25.megablast.out"
+        -out "${output_dir}/${filename}.contigs.vs.nt.cul5.1e25.megablast.out"
 done
 ```
 
