@@ -1212,7 +1212,7 @@ datadir="${HOME}/project/amr-analysis/output/spades"
 outputdir="${workingdir}/amr-analysis/output/abricate"
 
 
-databases=("card" "ncbi" "ecoh" "ecoli_vf" "resfinder" "vfdb")
+databases=("card" "ncbi" "ecoh" "ecoli_vf" "resfinder" "vfdb" "plasmidfinder")
 
 
 # check if output directory does not exist and create if it does not exist
