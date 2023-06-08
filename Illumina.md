@@ -1044,3 +1044,72 @@ for read1 in $datadir/*R1*;
   done
 
 ```
+Runiing SPAdes
+```#!/usr/bin/sh
+
+#SBATCH --partition highmem
+#SBATCH -w compute07
+#SBATCH -c 4
+#SBATCH --output=output_%j.txt
+#SBATCH --error=error_output_%j.txt
+#SBATCH --job-name="spades-assembly"
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=N.Okumu@cgiar.org
+
+# a shell script to perform quality and adapter trimming on illumina fastq data
+
+# clear the environment
+module purge
+
+# load required modules
+module load spades/3.15
+
+
+
+# specify I/O
+workingdir="/var/scratch/nokumu"
+
+#datadir="${workingdir}/amr-analysis/output/fastp"
+datadir="${HOME}/project/amr-analysis/output/fastp"
+
+outputdir="${workingdir}/amr-analysis/output/spades"
+
+
+# check if output directory does not exist and create if it does not exist
+if [[ ! -d ${outputdir} ]]; then
+    echo -e "directory does not exist, it will be created as: $outputdir"
+    mkdir -p ${outputdir}
+fi
+
+
+# change to output directory
+
+cd ${outputdir}
+
+# loop through the data directory to run each fastqc on each file
+
+for read1 in $datadir/*_1.trim.fastq.gz*;
+  do
+          read2="${read1%*_1.trim.fastq.gz}_2.trim.fastq.gz"
+
+          sample=$(basename ${read1} | cut -d _ -f 1)
+
+          #echo -e "$sample $read1 $read2"
+          sampledir="${outputdir}/$sample"
+          if [ ! -d "${sampledir}" ]; then
+              mkdir -p "${sampledir}"
+          fi
+
+
+          echo -e "assembling reads in sample: $sample"
+	  
+	  spades.py \
+              --isolate \
+              -1 ${read1} \
+              -2 ${read2} \
+              --threads ${SLURM_CPUS_PER_TASK} \
+              -o "${sampledir}"
+
+          echo -e "Assembly complete for sample: ${sample}"
+  done
+  ```
