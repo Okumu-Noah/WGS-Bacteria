@@ -1044,7 +1044,7 @@ for read1 in $datadir/*R1*;
   done
 
 ```
-Runiing SPAdes
+Running SPAdes
 ```#!/usr/bin/sh
 
 #SBATCH --partition highmem
@@ -1113,3 +1113,71 @@ for read1 in $datadir/*_1.trim.fastq.gz*;
           echo -e "Assembly complete for sample: ${sample}"
   done
   ```
+  #Running QUAST
+  ```#!/usr/bin/sh
+
+#SBATCH --partition batch
+#SBATCH -w compute05
+#SBATCH -c 4
+#SBATCH --output=output_%j.txt
+#SBATCH --error=error_output_%j.txt
+#SBATCH --job-name="quast-assessment"
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=N.Okumu@cgiar.org
+
+# a shell script to perform quality and adapter trimming on illumina fastq data
+
+# clear the environment
+module purge
+
+# load required modules
+module load quast/5.0.2
+
+
+
+# specify I/O
+workingdir="/var/scratch/nokumu"
+
+#datadir="${workingdir}/amr-analysis/output/fastp"
+datadir="${HOME}/project/amr-analysis/output/spades"
+
+outputdir="${workingdir}/amr-analysis/output/quast"
+
+
+# check if output directory does not exist and create if it does not exist
+if [[ ! -d ${outputdir} ]]; then
+    echo -e "directory does not exist, it will be created as: $outputdir"
+    mkdir -p ${outputdir}
+fi
+
+
+# change to output directory
+
+cd ${outputdir}
+
+# loop through the data directory to run each contigs.fasta file
+
+for assembly in $datadir/*/*contigs.fasta*;
+  do
+          sample=$(basename $(dirname ${assembly}))
+          #read2="${read1%*_1.trim.fastq.gz}_2.trim.fastq.gz"
+
+          #sample=$(basename ${read1} | cut -d _ -f 1)
+
+          #echo -e "$sample $read1 $read2"
+          sampledir="${outputdir}/$sample"
+          if [ ! -d "${sampledir}" ]; then
+              mkdir -p "${sampledir}"
+          fi
+
+
+          echo -e "assessing contigs in sample: $sample"
+
+	   quast.py \
+           -o "${sampledir}" \
+           -t ${SLURM_CPUS_PER_TASK} \
+           ${assembly}
+          echo -e "Assessment of the assembly complete for sample: ${sample}"
+  done
+
+```
