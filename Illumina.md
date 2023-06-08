@@ -1181,3 +1181,69 @@ for assembly in $datadir/*/*contigs.fasta*;
   done
 
 ```
+#Running abricate
+```#!/usr/bin/sh
+
+#SBATCH --partition batch
+#SBATCH -w compute05
+#SBATCH -c 4
+#SBATCH --output=output_%j.txt
+#SBATCH --error=error_output_%j.txt
+#SBATCH --job-name="abricate"
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=N.Okumu@cgiar.org
+
+# a shell script to perform quality and adapter trimming on illumina fastq data
+
+# clear the environment
+module purge
+
+# load required modules
+module load abricate/1.0.1
+
+
+
+# specify I/O
+workingdir="/var/scratch/nokumu"
+
+#datadir="${workingdir}/amr-analysis/output/fastp"
+datadir="${HOME}/project/amr-analysis/output/spades"
+
+outputdir="${workingdir}/amr-analysis/output/abricate"
+
+
+databases=("card" "ncbi" "ecoh" "ecoli_vf" "resfinder" "vfdb")
+
+
+# check if output directory does not exist and create if it does not exist
+if [[ ! -d ${outputdir} ]]; then
+    echo -e "directory does not exist, it will be created as: $outputdir"
+    mkdir -p ${outputdir}
+fi
+
+
+# change to output directory
+
+cd ${outputdir}
+
+# loop through the data directory to run each contigs.fasta file
+
+for assembly in $datadir/*/*contigs.fasta*;
+  do
+    sample=$(basename $(dirname ${assembly}))
+    for db in ${databases[*]}; do
+
+        outdir="${outputdir}/${db}"
+        if [[ ! -d ${outdir} ]]; then
+          mkdir -p ${outdir}
+        fi
+
+        if [ ! -f  "${outdir}/${sample}.abricate.tsv" ]; then
+          echo -e "Running Abricate on sample: $sample against ${db} database"
+	  abricate --db ${db} --threads ${SLURM_CPUS_PER_TASK} ${assembly} > "${outdir}/${sample}.abricate.tsv"
+          echo -e "Abricate done on sample: ${sample}"
+        fi
+    done
+  done
+
+```
