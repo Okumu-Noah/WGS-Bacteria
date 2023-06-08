@@ -965,3 +965,82 @@ for fastq in $datadir/*.gz;
           echo "Done!"
   done
 ```
+#Running fastp
+```#!/usr/bin/sh
+
+#SBATCH --partition batch
+#SBATCH -w compute06
+#SBATCH -c 8
+#SBATCH --output=output_%j.txt
+#SBATCH --error=error_output_%j.txt
+#SBATCH --job-name="fastp"
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=N.Okumu@cgiar.org
+
+# a shell script to perform quality and adapter trimming on illumina fastq data
+
+# clear the environment
+module purge
+
+# load required modules
+module load fastp/0.22.0
+
+
+
+# specify I/O
+datadir="${HOME}/fastq"
+
+workingdir="/var/scratch/nokumu"
+
+outputdir="${workingdir}/amr-analysis/output/fastp"
+
+
+# check if output directory does not exist and create if it does not exist
+if [[ ! -d ${outputdir} ]]; then
+    echo -e "directory does not exist, it will be created as: $outputdir"
+    mkdir -p ${outputdir}
+fi
+
+
+# change to output directory
+
+cd ${outputdir}
+
+# loop through the data directory to run each fastqc on each file
+
+for read1 in $datadir/*R1*;
+  do
+          read2=${read1//R1_001.fastq.gz/R2_001.fastq.gz}
+
+          sample=$(basename ${read1} | cut -d _ -f 1)
+          out_read1="${sample}_1.trim.fastq.gz"
+          out_read2="${sample}_2.trim.fastq.gz"
+          unpaired_read1="${sample}_1.fail.fastq.gz"
+          unpaired_read2="${sample}_2.fail.fastq.gz"
+
+    	 if [[ ! -f ${out_read1} ]] && [[ ! -f ${out_read2} ]];then
+                 echo -e "Running fastp on sample: ${sample}"
+                 fastp \
+                         --in1 ${read1} \
+                         --in2 ${read2} \
+                         --out1 ${out_read1} \
+                         --out2 ${out_read2} \
+                         --json ${sample}.fastp.json \
+                         --html ${sample}.fastp.html \
+                         --unpaired1 ${unpaired_read1} \
+                         --unpaired2 ${unpaired_read2} \
+                         --thread ${SLURM_CPUS_PER_TASK} \
+                         --detect_adapter_for_pe \
+                         --cut_front \
+                         --cut_tail \
+                         --trim_poly_x \
+                         --cut_mean_quality 20 \
+                         --qualified_quality_phred 25 \
+                         --unqualified_percent_limit 40 \
+                         --length_required 20 \
+                         2> ${sample}.fastp.log
+         echo -e "Done!"
+         fi
+  done
+
+```
