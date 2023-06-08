@@ -914,3 +914,54 @@ for assembly in $datadir/*/*contigs.fasta*;
   done
 
 ```
+
+#Running fastqc
+```#!/usr/bin/sh
+
+#SBATCH --partition batch
+#SBATCH -w compute06
+#SBATCH -c 8
+#SBATCH --output=output_%j.txt
+#SBATCH --error=error_output_%j.txt
+#SBATCH --job-name="fastqc"
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=N.Okumu@cgiar.org
+
+# a shell script to perform fastqc analysis on illumina fastq data
+
+# clear the environment
+module purge
+
+# load required modules
+module load fastqc/0.11.9
+
+
+
+# specify I/O
+datadir="${HOME}/fastq"
+
+workingdir="/var/scratch/nokumu"
+
+outputdir="${workingdir}/amr-analysis/output/fastqc"
+
+
+# check if output directory does not exist and create if it does not exist
+if [[ ! -d ${outputdir} ]]; then
+    echo -e "directory does not exist, it will be created as: $outputdir"
+    mkdir -p ${outputdir}
+fi
+
+
+# loop through the data directory to run each fastqc on each file
+
+for fastq in $datadir/*.gz;
+  do
+          sample=$(basename $fastq | cut -d . -f 1)
+          html="${sample}_fastqc.html"
+          zip="${sample}_fastqc.zip"
+
+          echo -e "Running FastQC on sample: ${sample}"
+          fastqc --outdir ${outputdir} --nogroup --threads ${SLURM_CPUS_PER_TASK} --format fastq ${fastq}
+          echo "Done!"
+  done
+```
