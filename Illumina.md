@@ -1247,3 +1247,8 @@ for assembly in $datadir/*/*contigs.fasta*;
   done
 
 ```
+#ResFinder command in Galaxy
+```
+blastn 2.6.0 - ResFinder
+module load blast/2.6.0; blastn -query $WORKING/input/S677-M1_contigs.fasta -db /db/gene_detection/ResFinder/resfinder-clustered_80.fasta -out blastn_S677-M1_contigs.asn -outfmt 11 -num_threads 1 -task megablast -max_target_seqs 20000
+```
