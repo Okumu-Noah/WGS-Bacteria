@@ -1254,15 +1254,12 @@ module load blast/2.6.0; blastn -query $WORKING/input/S677-M1_contigs.fasta -db 
 ```
 
 #Genome reference assembly
-a) Load our reference genome from NCBI, take fasta and gff files
 
-On a web browser, open the link NCBI.
+#a) Load our reference genome from NCBI, take fasta and gff files On a web browser, open the link NCBI. Type 'Escherichia coli' or the following "GCA_000285655.3" on the search box and select 'Genome' database.
 
-Type 'Pseudomonas aeruginosa' on the search box and select 'Genome' database.
+#Right click on the genome FASTA and and gff, then select 'copy links'.
 
-Right click on the genome FASTA and and gff, then select 'copy links'.
-
-Use wget to fetch the files as follows:
+#Use wget to fetch the files as follows:
 ```
 wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz
 ```
