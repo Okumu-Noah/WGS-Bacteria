@@ -1252,6 +1252,58 @@ for assembly in $datadir/*/*contigs.fasta*;
 blastn 2.6.0 - ResFinder
 module load blast/2.6.0; blastn -query $WORKING/input/S677-M1_contigs.fasta -db /db/gene_detection/ResFinder/resfinder-clustered_80.fasta -out blastn_S677-M1_contigs.asn -outfmt 11 -num_threads 1 -task megablast -max_target_seqs 20000
 ```
+
+#Genome reference assembly
+a) Load our reference genome from NCBI, take fasta and gff files
+
+On a web browser, open the link NCBI.
+
+Type 'Pseudomonas aeruginosa' on the search box and select 'Genome' database.
+
+Right click on the genome FASTA and and gff, then select 'copy links'.
+
+Use wget to fetch the files as follows:
+```
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz
+```
+
+```
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.gff.gz
+```
+
+#b) Gunzip and rename: escherichia_coli_ec01_substrain_genome.fasta and escherichia_coli_ec01_substrain.gff
+
+c) Indexing the ref_genome using samtools faidx produces a .fai file consisting of five tab-separated columns: chrname, seqlength, first-base offset, seqlinewidth without \n (newline character) and seqlinewidth with\n. This is essential for samtools' operations and bcftools.
+
+```
+module load samtools/1.15.1
+```
+
+```
+samtools faidx escherichia_coli_ec01_substrain_genome.fasta
+```
+
+#d) In order to allow easy access of genome regions during read mapping we will index the reference genome using bowtie2, bowtie2-build outputs six files 1.bt2, .2.bt2, .3.bt2, .4.bt2, .rev.1.bt2, and .rev.2.bt2 all constituting the index and are all needed to align reads to the reference which will no longer be needed by bowtie after this indexing. The output is in binary format and can not be visualized like text.
+
+```
+# Load modules
+module purge
+module load bowtie2/2.5.0
+
+# Define the input file and output prefix
+input_file="./escherichia_coli_ec01_substrain_genome.fasta"
+output_dir="./bowtie/ec01"
+
+#Create output directory if it doesn't exist
+mkdir -p "${output_dir}"
+
+# Run Bowtie 2 indexing
+bowtie2-build \
+    --threads 4 \
+    "${input_file}" \
+    "${output_dir}"/ec01
+```
+
 #Variant calling
 ```
 #!/usr/bin/bash -l
@@ -1405,7 +1457,5 @@ for snpeff_file in "$snpeff_dir"/*.snpeff.vcf.gz; do
 done
 
 echo "Variant extraction complete."
-
-
 
 ```
