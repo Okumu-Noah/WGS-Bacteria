@@ -1304,7 +1304,8 @@ bowtie2-build \
     "${output_dir}"/ec01
 ```
 
-#Variant calling
+# Comprehensive indexing of ref_genome, aligning reads, variants calling and annotation done at once using bwa, samtools, bcftools, snpeff &snsift
+
 ```
 #!/usr/bin/bash -l
 #SBATCH -p batch
