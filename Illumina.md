@@ -1304,7 +1304,7 @@ bowtie2-build \
     "${output_dir}"/ec01
 ```
 
-# Comprehensive indexing of ref_genome, aligning reads, variants calling and annotation done at once using bwa, samtools, bcftools, snpeff &snsift
+#Comprehensive indexing of ref_genome, aligning reads, variants calling and annotation done at once using bwa, samtools, bcftools, snpeff &snsift
 
 ```
 #!/usr/bin/bash -l
