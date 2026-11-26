@@ -1457,7 +1457,7 @@ done
 echo "Variant extraction complete."
 
 ```
-### Running Gubbins for identifying and masking recombination regions and generating iq-tree
+##### Running Gubbins for identifying and masking recombination regions and generating iq-tree
 
 ```
 #!/bin/bash
