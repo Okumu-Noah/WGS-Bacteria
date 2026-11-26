@@ -1457,4 +1457,61 @@ done
 echo "Variant extraction complete."
 
 ```
-#
+# Running Gubbins for identifying and masking recombination regions and generating iq-tree
+
+```
+#!/bin/bash
+#SBATCH --partition batch
+#SBATCH -w compute06
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=12
+#SBATCH --output=output_%j.txt
+#SBATCH --error=error_output_%j.txt
+#SBATCH --job-name=ecoli-phylo1
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=N.Okumu@cgiar.org
+
+# 1. Clean environment and load ALL necessary tools
+module purge
+module load gubbins/3.4
+# Check if iqtree is a separate module on your HPC
+module load iqtree/2.2.2
+
+# 2. Define Paths
+BASE_DIR="${HOME}/project/amr-analysis/output"
+GUBBINS_DIR="${BASE_DIR}/gubbins_output1"
+IQTREE_DIR="${BASE_DIR}/iqtree1"
+INPUT_ALN="${BASE_DIR}/bmge/core.full.bmge10g.aln"
+
+mkdir -p ${GUBBINS_DIR} ${IQTREE_DIR}
+
+# 3. Detecting recombination
+echo "Step 2: Detecting recombination with Gubbins..."
+run_gubbins.py --threads $SLURM_CPUS_PER_TASK \
+               --prefix ${GUBBINS_DIR}/core.full \
+               $INPUT_ALN
+
+# 4. Masking recombination
+# NOTE: Using the internal gubbins tool to ensure 'N' masking
+echo "Step 3: Masking recombination..."
+mask_gubbins_aln.py --aln $INPUT_ALN \
+                    --gff ${GUBBINS_DIR}/core.full.recombination_predictions.gff \
+                    --out ${GUBBINS_DIR}/core.full.masked_alignment.fasta
+
+# CHECK: Did the file actually get created?
+if [ ! -f "${GUBBINS_DIR}/core.full.masked_alignment.fasta" ]; then
+    echo "ERROR: Masked alignment file was not created. Check error_output_${SLURM_JOB_ID}.txt"
+    exit 1
+fi
+# 5. Building the tree
+echo "Step 4: Building the tree with IQ-TREE..."
+ALN_FASTA="${GUBBINS_DIR}/core.full.masked_alignment.fasta"
+
+iqtree2 -s ${ALN_FASTA} \
+        -m MFP \
+        -B 1000 \
+        -alrt 1000 \
+        -T AUTO --threads-max $SLURM_CPUS_PER_TASK \
+        --prefix ${IQTREE_DIR}/core.full
+```
