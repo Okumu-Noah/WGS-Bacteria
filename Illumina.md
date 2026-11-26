@@ -1515,3 +1515,65 @@ iqtree2 -s ${ALN_FASTA} \
         -T AUTO --threads-max $SLURM_CPUS_PER_TASK \
         --prefix ${IQTREE_DIR}/core.full
 ```
+#####Running plasmidid db for plasmid assembly....
+
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch
+#SBATCH -w compute06
+#SBATCH -n 16
+#SBATCH -J plasmidID
+#SBATCH --output=output_%j.txt
+#SBATCH --error=error_output_%j.txt
+
+
+# Exit with error reporting
+set -e
+
+# Load modules
+module purge
+module load plasmidid/1.6.5
+
+# Define directories and date now
+fastp_dir="./fastp"
+output_db="./plasmidIDdb"
+dateNow=$(date +"%Y-%m-%d")
+#dateNow="2023-11-08"
+
+# Make the output directory if it doesn't exist
+mkdir -p "${output_db}"
+
+#Download plasmidID database and set database path
+download_plasmid_database.py -o "${output_db}"
+plasmid_db_path="${output_db}/${dateNow}_plasmids.fasta"
+#plasmid_db_path="./plasmidIDdb/2023-11-08_plasmids.fasta"
+
+echo "Running PlasmidID"
+# Iterate over all the samples
+for R1 in "${fastp_dir}"/*_1.trim.fastq.gz; do
+  if [ -f "${R1}" ]; then
+    # Extract the sample name
+    sample=$(basename "${R1}" _1.trim.fastq.gz)
+
+    # Define R2 file path
+    R2="${fastp_dir}/${sample}_2.trim.fastq.gz"
+
+    # Run PlasmidID for plasmid assembly
+    echo "Running PlasmidID for sample ${sample}"
+    echo "R1 file ${sample}: ${R1}"
+    echo "R2 file ${sample}: ${R2}"
+    echo "Plasmid database path: ${plasmid_db_path}"
+    plasmidID \
+      -1 "${R1}" \
+      -2 "${R2}" \
+      -d "${plasmid_db_path}" \
+      -s "${sample}" \
+      --no-trim \
+      -T 16
+  else
+    echo -e "\tERROR!!! File not found: ${fastp_dir}/*_1.trim.fastq.gz"
+    exit
+  fi
+done
+```
+
