@@ -1576,4 +1576,72 @@ for R1 in "${fastp_dir}"/*_1.trim.fastq.gz; do
   fi
 done
 ```
+##### Running blast
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch
+#SBATCH -J blastn
+#SBATCH -n 4
 
+ 
+
+#module purge to avoid clashing
+module purge
+
+ 
+
+#module load
+module load blast/2.12.0+
+
+ 
+
+# Set the input directory
+input_dir="./output/spades"
+
+ 
+
+# Set the output directory
+output_dir="./output/blast"
+
+ 
+
+# Set the BLAST database path
+db_path="/export/data/bio/ncbi/blast/db/v5/nt"
+
+ 
+
+# Make the output directory if it doesn't exist
+mkdir -p "${output_dir}"
+
+ 
+
+# Loop over all sample directories in the input directory
+for sample_dir in "${input_dir}"/*/; do
+    # Extract the sample name from the directory path
+    sample=$(basename "${sample_dir}")
+# Make output directory for this sample
+    mkdir -p "${output_dir}/${sample}"
+
+ 
+
+# Perform the BLASTN search against scaffold.fasta
+    blastn -task megablast \
+           -query "${sample_dir}/scaffolds.fasta" \
+           -db "${db_path}" \
+           -outfmt '6 qseqid staxids bitscore std sscinames sskingdoms stitle' \
+           -culling_limit 5 \
+           -num_threads 4 \
+           -evalue 1e-25 \
+           -out "${output_dir}/${sample}/scaffolds.vs.nt.cul5.1e25.megablast.out"
+
+# Perform the BLASTN search against contigs.fasta
+    blastn -task megablast \
+           -query "${sample_dir}/contigs.fasta" \
+           -db "${db_path}" \
+           -outfmt '6 qseqid staxids bitscore std sscinames sskingdoms stitle' \
+           -culling_limit 5 \
+           -num_threads 4 \
+           -evalue 1e-25 \
+           -out "${output_dir}/${sample}/contigs.vs.nt.cul5.1e25.megablast.out"
+done
+```
