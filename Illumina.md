@@ -1515,7 +1515,7 @@ iqtree2 -s ${ALN_FASTA} \
         -T AUTO --threads-max $SLURM_CPUS_PER_TASK \
         --prefix ${IQTREE_DIR}/core.full
 ```
-#####Running plasmidid db for plasmid assembly....
+##### Running plasmidid db for plasmid assembly....
 
 ```
 #!/usr/bin/bash -l
